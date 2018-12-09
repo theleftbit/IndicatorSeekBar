@@ -50,6 +50,7 @@ public class IndicatorSeekBar extends View {
     private Paint mStockPaint;//the paint for seek bar drawing
     private TextPaint mTextPaint;//the paint for mTickTextsArr drawing
     private OnSeekChangeListener mSeekChangeListener;
+    private OnCustomStringListener onCustomStringListener;
     private Rect mRect;
     private float mCustomDrawableMaxHeight;//the max height for custom drawable
     private float lastProgress;
@@ -1532,7 +1533,9 @@ public class IndicatorSeekBar extends View {
     }
 
     String getIndicatorTextString() {
-        if (mIndicatorTextFormat != null && mIndicatorTextFormat.contains(FORMAT_TICK_TEXT)) {
+        if (onCustomStringListener != null) {
+            return onCustomStringListener.onProgress(mProgress);
+        } else if (mIndicatorTextFormat != null && mIndicatorTextFormat.contains(FORMAT_TICK_TEXT)) {
             if (mTicksCount > 1 && mTickTextsArr != null) {
                 return mIndicatorTextFormat.replace(FORMAT_TICK_TEXT, mTickTextsArr[getThumbPosOnTick()]);
             }
@@ -1943,6 +1946,15 @@ public class IndicatorSeekBar extends View {
      */
     public void setOnSeekChangeListener(@NonNull OnSeekChangeListener listener) {
         this.mSeekChangeListener = listener;
+    }
+
+    /**
+     * Set the listener to provide a custom string
+     *
+     * @param listener OnCustomStringListener
+     */
+    public void setOnCustomStringListener(@NonNull OnCustomStringListener listener) {
+        this.onCustomStringListener = listener;
     }
 
     /**
